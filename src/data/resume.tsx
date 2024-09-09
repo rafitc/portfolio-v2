@@ -9,7 +9,7 @@ export const DATA = {
   locationLink: "https://www.google.com/maps/place/kerala",
   description: "I love to build solutions using codes and wires.",
   summary:
-    "I'm a passionate software engineer with 2+ Years of Experience. Graduated from CUSAT and currenlty working as a Software engineer at Neewee Analytics. ",
+    "I'm a passionate software engineer with 2+ Years of Experience. Graduated from CUSAT and currently working as a Software engineer at Neewee Analytics. ",
   avatarUrl: "/me.png",
   skills: [
     "Python",
