@@ -77,9 +77,13 @@ export const DATA = {
       start: "June 2022",
       end: "Present",
       description:
-        "Implemented the Bitcoin discreet log contract (DLC) protocol specifications as an open source Typescript SDK. \
-        Dockerized all microservices and setup production kubernetes cluster. Architected a data lake using AWS S3 and \
-        Athena for historical backtesting of bitcoin trading strategies. Built a mobile app using react native and typescript.",
+        "I have developed a range of Python-based applications and algorithms that enhance operational efficiency across \
+        various industries. My work includes creating digital tracking systems for resource utilization, reducing maintenance \
+        downtime by 30-50% through optimized algorithms, and improving production scheduling for enterprise operations. \
+        I engineered a monitoring service using Server-Sent Events (SSE) in FastAPI for real-time log aggregation and debugging, \
+        and designed Linux services and automation scripts to streamline data transfer from files and IoT devices. Additionally, \
+        I developed a USB data aggregation device with ESP32-S3, achieving a 70% cost reduction, and created methodologies that \
+        cut hardware testing cycle time by 50%, demonstrating a commitment to innovation and operational excellence.",
     },
     {
       company: "MakerGram",
@@ -91,7 +95,10 @@ export const DATA = {
       start: "January 2020",
       end: "Present",
       description:
-        "Implemented a custom Kubernetes controller in Go to automate the deployment of MySQL and ProxySQL custom resources in order to enable 2,000+ internal developers to instantly deploy their app databases to production. Wrote several scripts in Go to automate MySQL database failovers while maintaining master-slave replication topologies and keeping Zookeeper nodes consistent with changes.",
+        "Since my internship, I have been actively involved with MakerGram, an open community for makers and hardware enthusiasts\
+         to grow and innovate. At MakerGram, we run monthly meetups to discuss the latest in technology, conduct hackathons, and \
+         provide mentorship to support various hardware projects. As part of the tech team, I have been responsible for \
+         handling technical aspects and am currently focused on developing hardware libraries for our upcoming project, Logram.",
     },
   ],
   education: [
@@ -106,73 +113,34 @@ export const DATA = {
   ],
   projects: [
     {
-      title: "Chat Collect",
-      href: "https://chatcollect.com",
-      dates: "Jan 2024 - Feb 2024",
+      title: "Automated Dino game using arduino",
+      href: "https://makergram.com/blog/automated-dino-game-using-arduino/",
+      dates: "April 2020 - Present",
       active: true,
-      description:
-        "With the release of the [OpenAI GPT Store](https://openai.com/blog/introducing-the-gpt-store), I decided to build a SaaS which allows users to collect email addresses from their GPT users. This is a great way to build an audience and monetize your GPT API usage.",
-      technologies: [
-        "Next.js",
-        "Typescript",
-        "PostgreSQL",
-        "Prisma",
-        "TailwindCSS",
-        "Stripe",
-        "Shadcn UI",
-        "Magic UI",
-      ],
+      description: "Simple fun project to automate Chrome Dino game .",
+      technologies: ["Python", "Arduino"],
       links: [
         {
           type: "Website",
-          href: "https://chatcollect.com",
-          icon: <Icons.globe className="size-3" />,
-        },
-      ],
-      image: "",
-      video:
-        "https://pub-83c5db439b40468498f97946200806f7.r2.dev/chat-collect.mp4",
-    },
-    {
-      title: "Magic UI",
-      href: "https://magicui.design",
-      dates: "June 2023 - Present",
-      active: true,
-      description:
-        "Designed, developed and sold animated UI components for developers.",
-      technologies: [
-        "Next.js",
-        "Typescript",
-        "PostgreSQL",
-        "Prisma",
-        "TailwindCSS",
-        "Stripe",
-        "Shadcn UI",
-        "Magic UI",
-      ],
-      links: [
-        {
-          type: "Website",
-          href: "https://magicui.design",
+          href: "https://makergram.com/blog/automated-dino-game-using-arduino/",
           icon: <Icons.globe className="size-3" />,
         },
         {
           type: "Source",
-          href: "https://github.com/magicuidesign/magicui",
+          href: "https://github.com/rafitc/arduDino",
           icon: <Icons.github className="size-3" />,
         },
       ],
       image: "",
-      video: "https://cdn.magicui.design/bento-grid.mp4",
+      video: "",
     },
   ],
   hackathons: [
     {
-      title: "Hack Western 5",
+      title: "COMING SOON",
       dates: "November 23rd - 25th, 2018",
-      location: "London, Ontario",
-      description:
-        "Developed a mobile application which delivered bedtime stories to children using augmented reality.",
+      location: "COMING SOON",
+      description: "COMING SOON",
       image:
         "https://pub-83c5db439b40468498f97946200806f7.r2.dev/hackline/hack-western.png",
       mlh: "https://s3.amazonaws.com/logged-assets/trust-badge/2019/mlh-trust-badge-2019-white.svg",
