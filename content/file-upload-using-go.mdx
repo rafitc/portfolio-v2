@@ -1,0 +1,23 @@
+---
+title: "Quick file upload using Go Routine and MinIo"
+publishedAt: "2024-10-10"
+summary: "Using go routine and channels to upload files quickly"
+---
+
+Hi there!
+
+I've been working on a side project for while. ([Click here to see the project](https://github.com/rafitc/lamhat)) I had to explore go lang for the project.
+
+In my use case, i want a object storage feature like s3 bucket or google file storage. I found opensource solution [minio](https://min.io) is the right tool for me.
+I've self hosted the tool in my server with very minimum spec, it is working very well.
+Then i wanted to integrate it with my go application. I used minio's [go sdk](https://pkg.go.dev/github.com/minio/minio-go) for this.
+
+I wanted to do multiple file uploads at same time quickly. So, i used go routines and channel to upload all files parallely.
+
+### Go initial setup
+
+Create a simple go project. (hope you have go installed. if not [refer here](https://go.dev/doc/tutorial/getting-started))
+
+```jsx
+console.log("Hello World");
+```
