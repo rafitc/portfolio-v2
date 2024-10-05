@@ -50,8 +50,6 @@ The actual file handling occurs in the service layer, which:
 // get the files
 files := form.File["files"]
 
-// Create a channel
-var wg sync.WaitGroup // init a wait group
 // Create a channel with length of files
 ch := make(chan model.Uploadstatus, len(files))
 
@@ -66,11 +64,8 @@ for _, file := range files {
 	// to protect from Race condition we can use either mutex or channels
 	// Im using channels to collect the result without race condition
 
-	// wg.Add(1)
-	go utils.PutImageInBucket(ctx, bucket_name, file, client, FileUploadStatus, &wg, ch)
+	go utils.PutImageInBucket(ctx, bucket_name, file, client, FileUploadStatus, ch)
 }
-// wait for the goroutine
-// wg.Wait()
 
 // Run a channel to collect the result
 for i := 0; i < len(files); i++ {
@@ -81,7 +76,7 @@ for i := 0; i < len(files); i++ {
 Each goroutine `PutImageInBucket()` abstracts the MinIO SDK's `PutObject` function and uses a channel to return the status:
 
 ```go
-func PutImageInBucket(ctx *gin.Context, bucket_name string, file *multipart.FileHeader, client *minio.Client, FileUploadStatus []model.Uploadstatus, wg *sync.WaitGroup, ch chan model.Uploadstatus) {
+func PutImageInBucket(ctx *gin.Context, bucket_name string, file *multipart.FileHeader, client *minio.Client, FileUploadStatus []model.Uploadstatus, ch chan model.Uploadstatus) {
 	var uploadStatusOfGoRoutine model.Uploadstatus
 	// Create a unique file name
 	object_name := fmt.Sprintf("%s-%s", uuid.NewString(), file.Filename) // uuid + file name (to makesure file name is unique)
@@ -98,7 +93,7 @@ func PutImageInBucket(ctx *gin.Context, bucket_name string, file *multipart.File
 		slog.Error("Error processing file", "filename", file.Filename, "error", err.Error())
 		// pass value into channel and exit
 		ch <- uploadStatusOfGoRoutine
-		defer wg.Done()
+		ctx.Done()
 	}
 	defer reader.Close()
 
@@ -109,12 +104,13 @@ func PutImageInBucket(ctx *gin.Context, bucket_name string, file *multipart.File
 		slog.Error("Error while uploading file", "filename", file.Filename, "error", err.Error())
 		// pass value into channel and exit
 		ch <- uploadStatusOfGoRoutine
-		defer wg.Done()
+		ctx.Done()
 	}
 	slog.Info("Successfully uploaded file %v Size : %d", file.Filename, info.Size)
 	uploadStatusOfGoRoutine.Status = true
 	// pass value into channel and exit
 	ch <- uploadStatusOfGoRoutine
+	ctx.Done()
 }
 ```
 
