@@ -1,0 +1,153 @@
+---
+title: "File upload using Go Routine and MinIo"
+publishedAt: "2024-10-06"
+summary: "Using goroutines and channels to upload files concurrently"
+---
+
+Hi there!
+
+I've been working on a side project for while. ([Click here to see the project](https://github.com/rafitc/lamhat)) This project led me to explore Go.
+
+For my use case, I needed an object storage solution similar to S3 or Google Cloud Storage. I found an open-source alternative, [minio](https://min.io), which fit my needs perfectly.
+
+I tested MinIO using their publicly hosted version. You can access it [from here](https://play.min.io:9443/).
+For credentials and login details, [Refer Here](https://min.io/docs/minio/kubernetes/upstream/administration/minio-console.html#logging-in)
+
+Next, I integrated MinIO with my Go application using the [MinIO Go SDK](https://pkg.go.dev/github.com/minio/minio-go/v7). Since I wanted to upload multiple files simultaneously, I used goroutines and channels for concurrent uploads.
+
+_The full source code is [here](https://github.com/rafitc/go-minio-example), but I'll explain a few key snippets._
+
+### Go initial setup
+
+Create a simple go project. (If you haven't installed Go yet, [refer here](https://go.dev/doc/install))
+
+```bash
+go mod init minio-example
+```
+
+To begin, I wrote a simple API using the [Gin framework](https://gin-gonic.com/) to handle file uploads:
+
+```go
+// end point to upload the files
+r.POST("/upload-files", func(ctx *gin.Context) {
+	// Call service to handle the request
+	result := service.UploadFiles(ctx)
+	ctx.JSON(result.Status_code, result)
+})
+```
+
+This API accepts a `POST` request with files (e.g., images) in the payload.
+The actual file handling occurs in the service layer, which:
+
+1. Connects to MinIO
+2. Retrieves the files from the multipart request
+3. Iterates through each file
+4. Fires off a goroutine to upload each file, using a channel to track the status
+5. Listens to the channel for file upload statuses
+6. Returns the status and closes the request
+
+```go
+// get the files
+files := form.File["files"]
+
+// Create a channel
+var wg sync.WaitGroup // init a wait group
+// Create a channel with length of files
+ch := make(chan model.Uploadstatus, len(files))
+
+// variable to store the fileuplod status
+var FileUploadStatus []model.Uploadstatus
+
+// Upload into bucket
+for _, file := range files {
+	// Fire each goroutine to upload files into bucket
+	// Set WaitGroup to wait till it ends
+	// After data upload each goroutine update their status in the structure
+	// to protect from Race condition we can use either mutex or channels
+	// Im using channels to collect the result without race condition
+
+	// wg.Add(1)
+	go utils.PutImageInBucket(ctx, bucket_name, file, client, FileUploadStatus, &wg, ch)
+}
+// wait for the goroutine
+// wg.Wait()
+
+// Run a channel to collect the result
+for i := 0; i < len(files); i++ {
+	FileUploadStatus = append(FileUploadStatus, <-ch)
+}
+```
+
+Each goroutine `PutImageInBucket()` abstracts the MinIO SDK's `PutObject` function and uses a channel to return the status:
+
+```go
+func PutImageInBucket(ctx *gin.Context, bucket_name string, file *multipart.FileHeader, client *minio.Client, FileUploadStatus []model.Uploadstatus, wg *sync.WaitGroup, ch chan model.Uploadstatus) {
+	var uploadStatusOfGoRoutine model.Uploadstatus
+	// Create a unique file name
+	object_name := fmt.Sprintf("%s-%s", uuid.NewString(), file.Filename) // uuid + file name (to makesure file name is unique)
+
+	// Update the static vars
+	uploadStatusOfGoRoutine.BucketName = bucket_name
+	uploadStatusOfGoRoutine.ObjectName = object_name
+
+	// open file
+	reader, err := file.Open()
+	if err != nil {
+		// update status
+		uploadStatusOfGoRoutine.Status = false
+		slog.Error("Error processing file", "filename", file.Filename, "error", err.Error())
+		// pass value into channel and exit
+		ch <- uploadStatusOfGoRoutine
+		defer wg.Done()
+	}
+	defer reader.Close()
+
+	info, err := client.PutObject(ctx, bucket_name, object_name, reader, file.Size, minio.PutObjectOptions{ContentType: "application/image"})
+	if err != nil {
+		// update status
+		uploadStatusOfGoRoutine.Status = false
+		slog.Error("Error while uploading file", "filename", file.Filename, "error", err.Error())
+		// pass value into channel and exit
+		ch <- uploadStatusOfGoRoutine
+		defer wg.Done()
+	}
+	slog.Info("Successfully uploaded file %v Size : %d", file.Filename, info.Size)
+	uploadStatusOfGoRoutine.Status = true
+	// pass value into channel and exit
+	ch <- uploadStatusOfGoRoutine
+}
+```
+
+After uploading, I generate pre-signed URLs to allow clients to access the uploaded files. Pre-signed URLs require you to specify the validity period (from 1 second to 7 days).
+
+```go
+func GeneratePresignedURL(ctx *gin.Context, client *minio.Client, bucket_name string) []model.Files {
+	var filePaths []model.Files
+	// Create a done channel.
+	doneCh := make(chan struct{})
+	defer close(doneCh)
+
+	// Read the obejct information from given bucket
+	// After each reading use the object name to generate the PreSigned URLs
+	for message := range client.ListObjects(ctx, bucket_name, minio.ListObjectsOptions{Prefix: "", Recursive: true}) {
+		objectName := message.Key
+
+		// With object name and bucket create a presigned URL with 60 Sec validity
+		reqParams := make(url.Values)
+		reqParams.Set("response-content-disposition", fmt.Sprintf("attachment; filename=\"%s\"", objectName))
+
+		url, err := client.PresignedGetObject(ctx, bucket_name, objectName, time.Duration(60*int(time.Second)), reqParams)
+		if err != nil {
+			slog.Error("Error while retrieving preSigned URL", "error", err.Error())
+			continue
+		}
+		filePaths = append(filePaths, model.Files{FilePath: url.String()})
+	}
+	slog.Info("Successfully Generated presigned URLs for objects in ", "bucket name", bucket_name)
+	return filePaths
+}
+```
+
+## But Why??
+
+By using goroutines, the application can upload multiple files concurrently. Channels help gather the upload statuses from each goroutine without encountering [Race condition](https://stackoverflow.com/questions/34510/what-is-a-race-condition).
