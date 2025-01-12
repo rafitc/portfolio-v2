@@ -113,6 +113,35 @@ export const DATA = {
   ],
   projects: [
     {
+      title: "Diary Writer",
+      href: "https://github.com/rafitc/diary-writer",
+      active: true,
+      description: "Log your daily activities quickly and effortlessly.",
+      technologies: [
+        "Go",
+        "SQLite3",
+        "Telegram API",
+        "go-git",
+        "Vercel",
+        "Next Js",
+        "Tailwind CSS",
+      ],
+      links: [
+        {
+          type: "Website",
+          href: "https://diary.rafirasheed.co",
+          icon: <Icons.globe className="size-3" />,
+        },
+        {
+          type: "Source",
+          href: "https://github.com/rafitc/diary-writer",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "",
+      video: "",
+    },
+    {
       title: "Lamhat",
       href: "https://github.com/rafitc/lamhat",
       active: true,
@@ -127,6 +156,23 @@ export const DATA = {
         {
           type: "Source",
           href: "https://github.com/rafitc/lamhat/",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "",
+      video: "",
+    },
+    {
+      title: "Prate",
+      href: "https://github.com/rafitc/prate",
+      active: true,
+      description:
+        "CLI chat application to use inside your office/private network",
+      technologies: ["Go", "TCP/IP", "CLI", "Terminal UI"],
+      links: [
+        {
+          type: "Source",
+          href: "https://github.com/rafitc/prate",
           icon: <Icons.github className="size-3" />,
         },
       ],
@@ -158,7 +204,8 @@ export const DATA = {
       title: "Figma Co-Pilot",
       href: "https://github.com/rafitc/figma-copilot/",
       active: true,
-      description: "Find and fix errors in your designs with Figma Co-pilot , a plugin for Figma which help in following proper Design Guidelines to carve a better UI.",
+      description:
+        "Find and fix errors in your designs with Figma Co-pilot , a plugin for Figma which help in following proper Design Guidelines to carve a better UI.",
       technologies: ["Figma", "TypeScript", "ReactJs", "Node.Js", "Webpack"],
       links: [
         {
@@ -174,7 +221,8 @@ export const DATA = {
       title: "Minnal-Murali",
       href: "https://github.com/rafitc/Minnal-Murali",
       active: true,
-      description: "Minnal-Murali is python Bot to send instant email for type form responses. ",
+      description:
+        "Minnal-Murali is python Bot to send instant email for type form responses. ",
       technologies: ["Python", "Flask"],
       links: [
         {
@@ -190,7 +238,8 @@ export const DATA = {
       title: "Tremor Therapy",
       href: "https://github.com/rafitc/Tremor-Therapy",
       active: true,
-      description: "Tremor Therapy is an interactive game developed for helping children and teens with their therapy process for Tremors(Shaky Hands). I",
+      description:
+        "Tremor Therapy is an interactive game developed for helping children and teens with their therapy process for Tremors(Shaky Hands). I",
       technologies: ["Micro Python", "Python", "ESP8266", "Firebase"],
       links: [
         {
@@ -206,7 +255,8 @@ export const DATA = {
       title: "Barish",
       href: "https://github.com/rafitc/barish",
       active: true,
-      description: "barish is a system that alerts people if it is going to rain soon to help them make decisions in their day-to-day lives.",
+      description:
+        "barish is a system that alerts people if it is going to rain soon to help them make decisions in their day-to-day lives.",
       technologies: ["Python", "ESP8266", "Firebase", "Arduino"],
       links: [
         {
