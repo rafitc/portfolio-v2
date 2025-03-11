@@ -9,7 +9,7 @@ export const DATA = {
   locationLink: "https://www.google.com/maps/place/kerala",
   description: "I love to build solutions using codes and wires.",
   summary:
-    "I'm a passionate software engineer with 2+ Years of Experience. Graduated from CUSAT and currently working as a Software engineer at Neewee Analytics. ",
+    "I'm a passionate software engineer with 2.5+ Years of Experience. Graduated from CUSAT and currently working as a Software engineer at Bhive Workspace. ",
   avatarUrl: "/me.png",
   skills: [
     "Python",
@@ -68,6 +68,18 @@ export const DATA = {
 
   work: [
     {
+      company: "Bhive Workspace",
+      href: "https://bhiveworkspace.com",
+      badges: [],
+      location: "Bangalore, IN",
+      title: "Backend Engineer",
+      logoUrl: "/bhive.png",
+      start: "March 2025",
+      end: "Present",
+      description:
+        "joined as a Backend Engineer at Bhive Workspace, a leading coworking space provider in India.",
+    },
+    {
       company: "Neewee Analytics",
       href: "https://neewee.ai",
       badges: [],
@@ -75,7 +87,7 @@ export const DATA = {
       title: "SDE-1",
       logoUrl: "/neewee-round.jpeg",
       start: "June 2022",
-      end: "Present",
+      end: "March 2025",
       description:
         "I have developed a range of Python-based applications and algorithms that enhance operational efficiency across \
         various industries. My work includes creating digital tracking systems for resource utilization, reducing maintenance \
