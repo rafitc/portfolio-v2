@@ -69,7 +69,7 @@ export const DATA = {
   work: [
     {
       company: "Bhive Workspace",
-      href: "https://bhiveworkspace.com",
+      href: "",
       badges: [],
       location: "Bangalore, IN",
       title: "Backend Engineer",
