@@ -1,9 +1,18 @@
 import { getBlogPosts, getPost } from "@/data/blog";
 import { DATA } from "@/data/resume";
 import { formatDate } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+
+const TAG_CONFIG: Record<string, { label: string; emoji: string }> = {
+  tech: { label: "Tech", emoji: "💻" },
+  career: { label: "Career", emoji: "💼" },
+  life: { label: "Life", emoji: "🌱" },
+  "midnight-thoughts": { label: "Midnight Thoughts", emoji: "🌙" },
+  spiritual: { label: "Spiritual", emoji: "🧘" },
+};
 
 export async function generateStaticParams() {
   const posts = await getBlogPosts();
@@ -93,9 +102,22 @@ export default async function Blog({
       </h1>
       <div className="flex justify-between items-center mt-2 mb-8 text-sm max-w-[650px]">
         <Suspense fallback={<p className="h-5" />}>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
-            {formatDate(post.metadata.publishedAt)}
-          </p>
+          <div className="flex items-center gap-3">
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">
+              {formatDate(post.metadata.publishedAt)}
+            </p>
+            {post.metadata.tags?.map((tag: string) => {
+              const config = TAG_CONFIG[tag] ?? {
+                label: tag.charAt(0).toUpperCase() + tag.slice(1),
+                emoji: "🏷️",
+              };
+              return (
+                <Badge key={tag} variant="secondary" className="text-xs">
+                  {config.emoji} {config.label}
+                </Badge>
+              );
+            })}
+          </div>
         </Suspense>
       </div>
       <article
